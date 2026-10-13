@@ -124,7 +124,7 @@ async function deleteRecords(ids) {
 // TODO: replace with your school's real coordinates (decimal degrees).
 const SCHOOL = { latitude: 28.7519732, longitude: 77.4988376};
 
-const GEOFENCE_RADIUS_M = 500;
+const GEOFENCE_RADIUS_M = 5000;
 const EARTH_RADIUS_M = 6371000;
 
 // Check-in window in device-local time, inclusive: 7:30:00 AM to 8:15:00 AM.
