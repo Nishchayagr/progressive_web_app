@@ -21,7 +21,12 @@ const Auth = (() => {
   const SIMULATED_LATENCY_MS = 800;
 
   const DEMO_ACCOUNTS = {
-    'TCH-1024': { password: 'demo1234', name: 'Teacher', institution: 'Government Inter College' }
+    'TCH-1024': { password: 'demo1234', name: 'Teacher', institution: 'Government Inter College' },
+    'CHETNA2005': { password: 'C2005', name: 'Chetna', institution: 'KIET' },
+    'NISHCHAY2005': { password: 'N2005', name: 'Nishchay', institution: 'KIET' },
+    'PALAK2008': { password: 'P2008', name: 'Palak', institution: 'KIET' },
+    'NITIL2005': { password: 'N2005', name: 'Nitil', institution: 'KIET' },
+    'PARTH2005': { password: 'C2005', name: 'Parth', institution: 'KIET' }
   };
 
   class AuthError extends Error {}
