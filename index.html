@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Smart Attendance Portal: Teacher Login</title>
+  <meta name="description" content="Smart Attendance Portal for Government Schools and Colleges.">
+  <meta name="theme-color" content="#14213D">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth.js"></script>
+  <script>Auth.redirectIfSignedIn();</script>
+</head>
+<body class="login-page">
+  <header class="brand">
+    <h1>Smart Attendance Portal</h1>
+    <p>Government Schools &amp; Colleges</p>
+  </header>
+
+  <main>
+    <section class="card login-card" aria-labelledby="login-heading">
+      <h2 id="login-heading">Teacher Login</h2>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="employee-id">Employee ID</label>
+          <input id="employee-id" name="employeeId" type="text" autocomplete="username"
+                 autocapitalize="characters" spellcheck="false" required placeholder="e.g. TCH-1024">
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" id="login-btn" class="btn primary">Login</button>
+        <p id="login-message" class="message" role="alert"></p>
+      </form>
+
+      <p id="demo-hint" class="hint" hidden></p>
+    </section>
+
+    <p class="note">Location access is required to mark attendance.</p>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>

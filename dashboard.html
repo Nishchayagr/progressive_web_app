@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Smart Attendance Portal: Dashboard</title>
+  <meta name="description" content="Mark your attendance, even without a connection.">
+  <meta name="theme-color" content="#14213D">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth.js"></script>
+  <script>Auth.requireSession();</script>
+</head>
+<body class="dashboard-page">
+  <header class="topbar">
+    <h1>Smart Attendance Portal</h1>
+    <nav class="topnav" aria-label="Account">
+      <button type="button" id="profile-btn" class="link">Profile</button>
+      <span aria-hidden="true">|</span>
+      <button type="button" id="logout-btn" class="link">Logout</button>
+    </nav>
+  </header>
+
+  <main class="dash">
+    <section class="card welcome" aria-labelledby="welcome-heading">
+      <h2 id="welcome-heading">Welcome, <span id="user-name"></span></h2>
+      <dl class="facts">
+        <dt>Employee ID</dt>
+        <dd id="user-id"></dd>
+        <dt>Institution</dt>
+        <dd id="user-institution"></dd>
+        <dt>Location</dt>
+        <dd>Registered institution</dd>
+      </dl>
+    </section>
+
+    <section class="status-grid" aria-label="Status">
+      <div class="tile" id="tile-location" data-state="busy">
+        <h3>Location status</h3>
+        <p class="tile-value" id="location-value">Checking location…</p>
+        <p class="tile-detail" id="location-detail"></p>
+      </div>
+
+      <div class="tile" id="tile-internet" data-state="idle">
+        <h3>Internet status</h3>
+        <p class="tile-value" id="internet-value">Checking…</p>
+        <p class="tile-detail" id="internet-detail"></p>
+      </div>
+
+      <div class="tile" id="tile-attendance" data-state="idle">
+        <h3>Attendance status</h3>
+        <p class="tile-value" id="attendance-value">Not marked</p>
+        <p class="tile-detail" id="attendance-detail"></p>
+      </div>
+
+      <div class="tile" id="tile-face" data-state="idle">
+        <h3>Face verification</h3>
+        <p class="tile-value" id="face-value">Not started</p>
+        <p class="tile-detail" id="face-detail"></p>
+      </div>
+    </section>
+
+    <section class="actions" aria-label="Actions">
+      <button type="button" id="verify-btn" class="btn primary">Verify my location</button>
+      <button type="button" id="mark-btn" class="btn primary">Mark attendance</button>
+      <button type="button" id="history-btn" class="btn secondary">View attendance history</button>
+      <p id="action-message" class="message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="verify" class="card panel verify" aria-labelledby="verify-heading" hidden>
+      <h2 id="verify-heading">Face check</h2>
+      <div id="camera-frame" class="camera-frame" hidden>
+        <video id="camera" playsinline muted autoplay aria-label="Live camera preview"></video>
+      </div>
+      <ul id="liveness" class="liveness" aria-label="Face check progress">
+        <li data-step="face">Face found</li>
+        <li data-step="blink">Blink</li>
+        <li data-step="left">Turned left</li>
+        <li data-step="right">Turned right</li>
+      </ul>
+      <div id="verify-message" class="result" data-state="idle" role="status" aria-live="polite">
+        <p id="verify-headline" class="result-headline"></p>
+      </div>
+      <p class="help">Video is processed on this device. It is not saved or uploaded.</p>
+      <button type="button" id="verify-close" class="btn secondary small">Close</button>
+    </section>
+
+    <section id="history" class="card panel" aria-labelledby="history-heading" hidden>
+      <div class="panel-head">
+        <h2 id="history-heading">Attendance history</h2>
+        <div class="panel-actions">
+          <button type="button" id="sync-now" class="btn secondary small">Sync now</button>
+          <button type="button" id="history-close" class="btn secondary small">Close</button>
+        </div>
+      </div>
+      <ul id="history-list" class="records"></ul>
+      <p id="history-empty" class="empty">No attendance has been marked on this device yet.</p>
+    </section>
+  </main>
+
+  <dialog id="profile-dialog" aria-labelledby="profile-heading">
+    <h2 id="profile-heading">Profile</h2>
+    <dl class="facts">
+      <dt>Name</dt>
+      <dd id="profile-name"></dd>
+      <dt>Employee ID</dt>
+      <dd id="profile-id"></dd>
+      <dt>Institution</dt>
+      <dd id="profile-institution"></dd>
+      <dt>Signed in</dt>
+      <dd id="profile-signed-in"></dd>
+    </dl>
+    <form method="dialog">
+      <button class="btn secondary small" value="close">Close</button>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
