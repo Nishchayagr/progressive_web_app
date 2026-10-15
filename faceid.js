@@ -25,7 +25,7 @@ const FaceID = (() => {
   // CHANGE IT: in the browser console run
   //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR NEW PASSCODE')).then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('')))
   // and paste the result below. (Anyone can read this hash, so use a long passcode.)
-  const ADMIN_PASSCODE_SHA256 = 'Dontdoproxy';
+  const ADMIN_PASSCODE_SHA256 = 'c0606816521209a5b49f0d02ffd02904b5fcf63fb84a7d260ac5bc7484398450';
 
   /* ---------- Tuning ---------- */
   // Recommended comparison settings for Human's default "faceres" model.
