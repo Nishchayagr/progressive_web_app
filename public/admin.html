@@ -239,6 +239,11 @@
     </form>
   </dialog>
 
+  <script>
+    const SUPABASE_URL = 'https://feiqyrcmxhdniwwuqjum.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlaXF5cmNteGhkbml3d3VxanVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3MjAxOTcsImV4cCI6MjEwODI5NjE5N30.1XAerZtBY7H8-Sc-VvD3qqfvhqOQYmRKKR1yjysnvP)';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
   <script src="js/admin-ui.js"></script>
 </body>
 </html>
