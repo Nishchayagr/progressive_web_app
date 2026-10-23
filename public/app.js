@@ -2,7 +2,7 @@
 
 // Initialize Supabase Client with your project URL and Token
 const SUPABASE_URL = 'https://feiqyrcmxhdniwwuqjum.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlaXF5cmNteGhkbml3d3VxanVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3MjAxOTcsImV4cCI6MjEwODI5NjE5N30.1XAerZtBY7H8-Sc-VvD3qqfvhqOQYmRKKR1yjysnvP';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5YmtjdmF5ZmdjY3l3bGJyZ3FvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2OTA3NDIsImV4cCI6MjEwODI2Njc0Mn0.a6g39tO7zZV1Ph7UojPxGLH60vNrlE96Y2oUbLi7h48';
 const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 // The dashboard needs a signed-in teacher. auth.js has already started the
