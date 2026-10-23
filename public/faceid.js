@@ -30,9 +30,9 @@ const FaceID = (() => {
   /* ---------- Tuning ---------- */
   // Recommended comparison settings for Human's default "faceres" model.
   const MATCH_OPTIONS = { order: 2, multiplier: 25, min: 0.2, max: 0.8 };
-  const MATCH_THRESHOLD = 0.6;   // similarity (0 to 1) needed to count as the same person
-  const MIN_REAL = 0.6;          // anti-spoof score: below this looks like a screen or a print
-  const MIN_LIVE = 0.6;          // liveness score: below this looks like a recording
+  const MATCH_THRESHOLD = 0.50;   // similarity (0 to 1) needed to count as the same person
+  const MIN_REAL = 0.50;          // anti-spoof score: below this looks like a screen or a print
+  const MIN_LIVE = 0.50;          // liveness score: below this looks like a recording
   const MIN_FACE_SCORE = 0.6;    // how sure the detector is that it sees a face
   const MIN_FACE_SIZE = 160;     // smallest face (pixels) that is clear enough to compare
   const MIN_GOOD_SAMPLES = 5;    // clear camera frames needed to decide
