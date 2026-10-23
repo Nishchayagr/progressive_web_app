@@ -1,78 +1,127 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - Smart Attendance</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-    .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    h1 { color: #14213D; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-    th { background-color: #fca311; color: #14213D; }
-    .status-present { color: green; font-weight: bold; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Admin Dashboard - Live Attendance</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase JavaScript Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Live Attendance Feed</h1>
-    <button onclick="loadLiveRecords()" style="margin-bottom:15px; padding:8px 16px; cursor:pointer;">Refresh Records</button>
-    <table>
-      <thead>
-        <tr>
-          <th>Employee ID</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Time</th>
-        </tr>
-      </thead>
-      <tbody id="records-body">
-        <tr><td colspan="4">Loading records securely...</td></tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="container" id="adminContainer" style="display: none;">
+        <h1>Live Attendance Feed (Admin Secured)</h1>
+        
+        <button id="refreshBtn" class="btn" style="margin-bottom: 20px;">Refresh Records</button>
+        <button id="logoutBtn" class="btn" style="background-color: #dc3545; margin-bottom: 20px; margin-left: 10px;">Logout</button>
+        
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: orange; color: white;">
+                    <th style="padding: 10px; text-align: left;">Employee ID</th>
+                    <th style="padding: 10px; text-align: left;">Status</th>
+                    <th style="padding: 10px; text-align: left;">Date</th>
+                    <th style="padding: 10px; text-align: left;">Time</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+                <tr>
+                    <td colspan="4" style="padding: 10px;">Loading records...</td>
+                </tr>
+            </tbody>
+        </table>
+        <p id="errorMsg" style="color: red; margin-top: 15px;"></p>
+    </div>
 
-  <script>
-    const SUPABASE_URL = 'https://feiqyrcmxhdniwwuqjum.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlaXF5cmNteGhkbml3d3VxanVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3MjAxOTcsImV4cCI6MjEwODI5NjE5N30.1XAerZtBY7H8-Sc-VvD3qqfvhqOQYmRKKR1yjysnvPw';
+    <!-- Unauthorized message container -->
+    <div id="unauthorizedContainer" style="text-align: center; margin-top: 50px; display: none;">
+        <h2 style="color: red;">Access Denied</h2>
+        <p>You do not have administrator privileges to view this page.</p>
+        <a href="index.html" class="btn">Go Back to Home</a>
+    </div>
 
-    async function loadLiveRecords() {
-      const tbody = document.getElementById('records-body');
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/attendance_records?select=*&order=timestamp.desc`, {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        });
+    <script>
+        const SUPABASE_URL = 'https://feiqyrcmxhdniwwuqjum.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlaXF5cmNteGhkbml3d3VxanVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3MjAxOTcsImV4cCI6MjEwODI5NjE5N30.1XAerZtBY7H8-Sc-VvD3qqfvhqOQYmRKKR1yjysnvPw';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        if (!response.ok) throw new Error('Failed to fetch history');
-        const data = await response.json();
+        async function verifyAdminAndLoad() {
+            // 1. Check if user is logged in
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+            
+            if (sessionError || !session) {
+                // Not logged in, redirect to index/login page
+                window.location.href = 'index.html';
+                return;
+            }
 
-        if (!data || data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4">No attendance records found yet.</td></tr>';
-          return;
+            const user = session.user;
+
+            // 2. Check user role from profiles table securely
+            const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
+
+            if (profileError || !profile || profile.role !== 'admin') {
+                // Logged in, but not an admin -> Show Access Denied
+                document.getElementById('unauthorizedContainer').style.display = 'block';
+                return;
+            }
+
+            // 3. User is verified admin -> Show Dashboard and Load Data
+            document.getElementById('adminContainer').style.display = 'block';
+            loadLiveRecords();
         }
 
-        tbody.innerHTML = data.map(record => {
-          const timeString = new Date(record.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          return `
-            <tr>
-              <td>${record.teacher_id || 'Unknown'}</td>
-              <td class="status-${(record.status || '').toLowerCase()}">${record.status || 'Present'}</td>
-              <td>${record.date || new Date(record.timestamp).toLocaleDateString()}</td>
-              <td>${timeString}</td>
-            </tr>
-          `;
-        }).join('');
-      } catch (err) {
-        console.error('Data fetch error:', err);
-        tbody.innerHTML = `<tr><td colspan="4" style="color:red;">Failed to connect to database.</td></tr>`;
-      }
-    }
+        async function loadLiveRecords() {
+            const tbody = document.getElementById('attendanceTableBody');
+            const errorMsg = document.getElementById('errorMsg');
+            tbody.innerHTML = '<tr><td colspan="4" style="padding: 10px;">Loading records...</td></tr>';
+            errorMsg.textContent = '';
 
-    loadLiveRecords();
-  </script>
+            try {
+                const { data, error } = await supabase
+                    .from('attendance_records')
+                    .select('*')
+                    .order('date', { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 10px;">No attendance records found yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                data.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${record.employee_id}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${record.status}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${record.date}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${record.time}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error('Data fetch error:', err);
+                errorMsg.textContent = 'Failed to connect to database.';
+                tbody.innerHTML = '';
+            }
+        }
+
+        document.getElementById('refreshBtn').addEventListener('click', loadLiveRecords);
+        
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        });
+
+        // Run security check on page load
+        window.addEventListener('DOMContentLoaded', verifyAdminAndLoad);
+    </script>
 </body>
 </html>
