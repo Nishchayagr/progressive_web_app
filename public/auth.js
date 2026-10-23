@@ -22,8 +22,14 @@ const Auth = (() => {
 
   const DEMO_ACCOUNTS = {
     'TCH-1024': { password: 'demo1234', name: 'Teacher', institution: 'Government Inter College' },
-    'PALAK2008': { password: 'P2008', name: 'Palak', institution: 'KIET Group of Institutions' },
-    'NISHCHAY2005': { password: 'N2005', name: 'Nishchay', institution: 'KIET Group of Institutions' }
+    'PALAK2008': { password: 'P2008', name: 'Palak Pandey', institution: 'KIET Group of Institutions' },
+    'NISHCHAY2005': { password: 'N2005', name: 'Nishchay Agrawal', institution: 'KIET Group of Institutions' },
+    'NITIL2005': { password: 'N2005', name: 'Nitil Yadav', institution: 'KIET Group of Institutions' },
+    'PARTH2005': { password: 'P2005', name: 'Parth Rai', institution: 'KIET Group of Institutions' },
+    'CHETNA2005': { password: 'C2005', name: 'Chetna Singh', institution: 'KIET Group of Institutions' },
+    'TEACHER1': { password: 'T001', name: 'Teacher', institution: 'KIET Group of Institutions' },
+    'TEACHER2': { password: 'T002', name: 'Teacher', institution: 'KIET Group of Institutions' },
+    'TEACHER3': { password: 'T003', name: 'Teacher', institution: 'KIET Group of Institutions' }
   };
 
   class AuthError extends Error {}
