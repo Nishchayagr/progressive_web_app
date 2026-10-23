@@ -2,77 +2,242 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - Smart Attendance</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-    .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    h1 { color: #14213D; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-    th { background-color: #fca311; color: #14213D; }
-    .status-present { color: green; font-weight: bold; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Smart Attendance - Admin Portal</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="css/admin-style.css">
 </head>
-<body>
-  <div class="container">
-    <h1>Live Attendance Feed</h1>
-    <button onclick="loadLiveRecords()" style="margin-bottom:15px; padding:8px 16px; cursor:pointer;">Refresh Records</button>
-    <table>
-      <thead>
-        <tr>
-          <th>Employee ID</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Time</th>
-        </tr>
-      </thead>
-      <tbody id="records-body">
-        <tr><td colspan="4">Loading records securely...</td></tr>
-      </tbody>
-    </table>
-  </div>
+<body class="admin-layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>Admin Portal</h2>
+      <button id="mobile-close" class="btn secondary small mobile-only">Close</button>
+    </div>
+    <div class="nav-links">
+      <button class="nav-item active" data-target="view-dashboard">Dashboard</button>
+      <button class="nav-item" data-target="view-teachers">Teacher Management</button>
+      <button class="nav-item" data-target="view-institutions">Institutions</button>
+      <button class="nav-item" data-target="view-inspection">Inspection</button>
+      <button class="nav-item" data-target="view-settings">Settings (GPS & Time)</button>
+      <button class="nav-item" data-target="view-reports">Reports & Audit</button>
+    </div>
+  </nav>
 
-  <script>
-    const SUPABASE_URL = 'https://feiqyrcmxhdniwwuqjum.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlaXF5cmNteGhkbml3d3VxanVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3MjAxOTcsImV4cCI6MjEwODI5NjE5N30.1XAerZtBY7H8-Sc-VvD3qqfvhqOQYmRKKR1yjysnvPw';
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobile-menu" class="btn secondary small mobile-only">Menu</button>
+        <h3 id="page-title">Dashboard Overview</h3>
+      </div>
+      <div class="topbar-right">
+        <span>Admin User (MOCK)</span>
+        <a href="../index.html" class="link" style="color: var(--absent);">Exit Admin</a>
+      </div>
+    </header>
 
-    async function loadLiveRecords() {
-      const tbody = document.getElementById('records-body');
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/attendance_records?select=*&order=timestamp.desc`, {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        });
+    <!-- DASHBOARD VIEW -->
+    <section id="view-dashboard" class="view-section active">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Total Teachers</div>
+          <p class="metric-value" id="dash-total-teachers">--</p>
+        </div>
+        <div class="metric-card success">
+          <div class="metric-title">Present Today</div>
+          <p class="metric-value" id="dash-present">--</p>
+        </div>
+        <div class="metric-card warning">
+          <div class="metric-title">Late Today</div>
+          <p class="metric-value" id="dash-late">--</p>
+        </div>
+        <div class="metric-card danger">
+          <div class="metric-title">Absent Today</div>
+          <p class="metric-value" id="dash-absent">--</p>
+        </div>
+      </div>
+      
+      <div class="card mt-20">
+        <h3>Recent Attendance Activity (MOCK DATA)</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Institution</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dash-activity-tbody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-        if (!response.ok) throw new Error('Failed to fetch history');
-        const data = await response.json();
+    <!-- TEACHER MANAGEMENT VIEW -->
+    <section id="view-teachers" class="view-section" hidden>
+      <div class="card panel-head">
+        <div>
+          <input type="text" id="teacher-search" placeholder="Search ID or Name..." class="search-input">
+        </div>
+        <button class="btn primary small" id="btn-add-teacher">Add Teacher</button>
+      </div>
+      <div class="card mt-20">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Institution</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teachers-tbody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-        if (!data || data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4">No attendance records found yet.</td></tr>';
-          return;
-        }
+    <!-- INSTITUTIONS VIEW -->
+    <section id="view-institutions" class="view-section" hidden>
+      <div class="card panel-head">
+        <h3>Registered Institutions</h3>
+        <button class="btn primary small">Add Institution</button>
+      </div>
+      <div class="card mt-20">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Assigned Teachers</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="institutions-tbody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-        tbody.innerHTML = data.map(record => {
-          const timeString = new Date(record.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          return `
-            <tr>
-              <td>${record.teacher_id || 'Unknown'}</td>
-              <td class="status-${(record.status || '').toLowerCase()}">${record.status || 'Present'}</td>
-              <td>${record.date || new Date(record.timestamp).toLocaleDateString()}</td>
-              <td>${timeString}</td>
-            </tr>
-          `;
-        }).join('');
-      } catch (err) {
-        console.error('Data fetch error:', err);
-        tbody.innerHTML = `<tr><td colspan="4" style="color:red;">Failed to connect to database.</td></tr>`;
-      }
-    }
+    <!-- INSPECTION VIEW -->
+    <section id="view-inspection" class="view-section" hidden>
+      <div class="card panel-head">
+        <input type="date" id="inspection-date" class="search-input">
+        <select id="inspection-inst" class="search-input">
+          <option value="all">All Institutions</option>
+          <option value="Govt. Inter College">Govt. Inter College</option>
+        </select>
+      </div>
+      <div class="card mt-20">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Teacher</th>
+                <th>Status</th>
+                <th>GPS Status</th>
+                <th>Face ID Status</th>
+              </tr>
+            </thead>
+            <tbody id="inspection-tbody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-    loadLiveRecords();
-  </script>
+    <!-- SETTINGS VIEW -->
+    <section id="view-settings" class="view-section" hidden>
+      <div class="settings-grid">
+        <div class="card">
+          <h3>Attendance Timings</h3>
+          <form id="form-timing" class="mt-20 field-group">
+            <div class="field">
+              <label for="time-start">Check-in Start Time</label>
+              <input type="time" id="time-start" value="07:30" required>
+            </div>
+            <div class="field">
+              <label for="time-late">Late Threshold</label>
+              <input type="time" id="time-late" value="08:15" required>
+            </div>
+            <div class="field">
+              <label>Working Days</label>
+              <div class="checkbox-group">
+                <label><input type="checkbox" checked> Mon</label>
+                <label><input type="checkbox" checked> Tue</label>
+                <label><input type="checkbox" checked> Wed</label>
+                <label><input type="checkbox" checked> Thu</label>
+                <label><input type="checkbox" checked> Fri</label>
+                <label><input type="checkbox" checked> Sat</label>
+                <label><input type="checkbox"> Sun</label>
+              </div>
+            </div>
+            <button type="submit" class="btn primary mt-20">Save Timings</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>GPS Geofence Boundaries</h3>
+          <p class="help">Define the central coordinate and the permitted check-in radius.</p>
+          <form id="form-gps" class="mt-20 field-group">
+            <div class="field">
+              <label for="gps-lat">Latitude</label>
+              <input type="number" step="any" id="gps-lat" value="28.7519732" required>
+            </div>
+            <div class="field">
+              <label for="gps-lng">Longitude</label>
+              <input type="number" step="any" id="gps-lng" value="77.4988376" required>
+            </div>
+            <div class="field">
+              <label for="gps-radius">Permitted Radius (Meters)</label>
+              <input type="number" id="gps-radius" value="500" required>
+              <p class="help mt-10">Teachers must be within this many meters of the exact coordinates to mark attendance.</p>
+            </div>
+            <button type="submit" class="btn primary mt-20">Save GPS Settings</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS VIEW -->
+    <section id="view-reports" class="view-section" hidden>
+      <div class="card">
+        <h3>Reports & Audit Logs (MOCK)</h3>
+        <p class="help mt-10">Data exports and detailed system audit logs will be generated by the backend.</p>
+        <div class="mt-20 flex-gap">
+          <button class="btn secondary" disabled>Export Monthly Attendance (CSV)</button>
+          <button class="btn secondary" disabled>Download System Audit Log (PDF)</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- REUSABLE MODAL DIALOG -->
+  <dialog id="admin-dialog" aria-labelledby="dialog-title">
+    <h2 id="dialog-title">Title</h2>
+    <form id="admin-dialog-form" method="dialog">
+      <div id="dialog-content" class="field-group mt-20"></div>
+      <div class="dialog-actions mt-20">
+        <button type="submit" class="btn primary small" id="dialog-submit">Save</button>
+        <button type="button" class="btn secondary small" id="dialog-cancel">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/admin-ui.js"></script>
 </body>
 </html>
