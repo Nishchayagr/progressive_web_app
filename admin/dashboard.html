@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Admin Dashboard Preview</title>
+  <style>
+    :root {
+      --bg: #eef2f6; --surface: #ffffff; --ink: #14213d; --ink-soft: #55607a;
+      --line: #d3dae5; --accent: #f2b705; --present: #1f7a4d; --late: #b86e00; --absent: #b3261e;
+      --radius: 14px; --font: "Avenir Next", "Segoe UI", Roboto, sans-serif;
+    }
+    body { margin: 0; font-family: var(--font); background: var(--bg); color: var(--ink); display: flex; min-height: 100vh; }
+    .sidebar { width: 250px; background: var(--ink); color: #fff; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+    .sidebar h2 { font-size: 1.2rem; color: var(--accent); margin-bottom: 20px; text-transform: uppercase; }
+    .nav-item { color: #c9d3e6; text-decoration: none; font-weight: 600; padding: 10px; border-radius: 8px; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+    .main-content { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 15px 20px; border-radius: var(--radius); border: 1px solid var(--line); }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+    .metric-card { background: var(--surface); padding: 20px; border-radius: var(--radius); border: 1px solid var(--line); border-left: 5px solid var(--ink); }
+    .metric-card.success { border-left-color: var(--present); }
+    .metric-card.warning { border-left-color: var(--late); }
+    .metric-card.danger { border-left-color: var(--absent); }
+    .metric-title { font-size: 0.85rem; color: var(--ink-soft); text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+    .metric-value { font-size: 1.8rem; font-weight: bold; margin: 0; }
+    .data-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+    .data-table th, .data-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--line); }
+    .data-table th { background: #f8fafc; font-weight: 600; color: var(--ink-soft); font-size: 0.9rem; text-transform: uppercase; }
+    .badge { padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: bold; }
+    .badge.present { background: #e3f4ea; color: var(--present); }
+    .badge.late { background: #fff1d6; color: var(--late); }
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100%; padding: 15px; flex-direction: row; flex-wrap: wrap; }
+      .sidebar h2 { width: 100%; margin-bottom: 5px; }
+      .data-table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Admin Portal</h2>
+    <a href="#" class="nav-item active">Dashboard</a>
+    <a href="#" class="nav-item">Teachers</a>
+    <a href="#" class="nav-item">Institutions</a>
+    <a href="#" class="nav-item">GPS Settings</a>
+    <a href="#" class="nav-item">Reports</a>
+  </nav>
+  <main class="main-content">
+    <header class="topbar">
+      <h3 style="margin:0;">Dashboard Overview</h3>
+      <div style="font-weight:600;">Admin User | <a href="#" style="color:var(--absent); text-decoration:none;">Logout</a></div>
+    </header>
+    <section class="metrics-grid">
+      <div class="metric-card"><div class="metric-title">Registered Teachers</div><p class="metric-value">142</p></div>
+      <div class="metric-card success"><div class="metric-title">Present Today</div><p class="metric-value">128</p></div>
+      <div class="metric-card warning"><div class="metric-title">Late Today</div><p class="metric-value">8</p></div>
+      <div class="metric-card danger"><div class="metric-title">Absent Today</div><p class="metric-value">6</p></div>
+    </section>
+    <section>
+      <h3 style="margin-bottom:10px;">Recent Attendance Activity</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Employee ID</th><th>Name</th><th>Institution</th><th>Time</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>TCH-1024</td><td>Rajesh Kumar</td><td>Govt. Inter College</td><td>07:42 AM</td><td><span class="badge present">Present</span></td></tr>
+          <tr><td>TCH-1089</td><td>Priya Sharma</td><td>Govt. Girls High School</td><td>08:14 AM</td><td><span class="badge present">Present</span></td></tr>
+          <tr><td>TCH-1102</td><td>Amit Patel</td><td>Govt. Inter College</td><td>08:22 AM</td><td><span class="badge late">Late</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
